@@ -1,19 +1,28 @@
 package com.example.switchingmodes;
 
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorDirectChannel;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.MemoryFile;
+import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class TDGModel {
     private class PressEvent{
         private char press;
@@ -41,7 +50,11 @@ public class TDGModel {
     private File inputFile;
     private Queue<PressEvent> peQ;
 
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public TDGModel(SensorManager sm, File senf, File inpf) throws IOException {
+
+
         mSensorManager = sm;
         sensorFile = senf;
         inputFile = inpf;
@@ -49,8 +62,13 @@ public class TDGModel {
 
         mem = new MemoryFile(null, 1048575);
 
-        mSDC = sm.createDirectChannel(mem);
-        peQ  = new LinkedList<PressEvent>();
+        try {
+            mSDC = sm.createDirectChannel(mem);
+        } catch (UncheckedIOException e) {
+            e.printStackTrace();
+        }
+
+            peQ  = new LinkedList<PressEvent>();
 
     }
 
@@ -58,6 +76,7 @@ public class TDGModel {
         peQ.add(new PressEvent(pressed,timestamp));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void setLogging(boolean b) throws IOException {
         if(b)
         {
