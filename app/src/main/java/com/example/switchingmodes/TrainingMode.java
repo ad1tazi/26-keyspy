@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TrainingMode extends AppCompatActivity {
 
@@ -72,23 +73,15 @@ public class TrainingMode extends AppCompatActivity {
 
         keyboardSetup();
 
-        Button gKey = buttons.get('g');
-        gKey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tdgMod.input('g', SystemClock.elapsedRealtimeNanos());
-                updateTextView("" + 'g');
-            }
-        });
 
-        /*for (Map.Entry<Character, Button> entry : buttons.entrySet()) {
+        for (Map.Entry<Character, Button> entry : buttons.entrySet()) {
             entry.getValue().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     tdgMod.input(entry.getKey(), SystemClock.elapsedRealtimeNanos());
                 }
             });
-        }*/
+        }
 
         try {
             tdgMod.setLogging(true);
